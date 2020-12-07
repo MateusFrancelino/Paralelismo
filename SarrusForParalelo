@@ -82,7 +82,7 @@ int main() {
         }
         }
         
-    #pragma omp parallel num_threads(4)
+    #pragma omp parallel num_threads(2)
     {
             total = omp_get_num_threads();
             int id = omp_get_thread_num();
@@ -92,7 +92,7 @@ int main() {
                 int soma_local = 0;
                 int sub_local = 0;
                 if (omp_get_thread_num() % 2 == 0) {
-                    #pragma omp for
+                    
                     for (int coluna = 0; coluna < 3; coluna ++) {
                         
 
@@ -105,12 +105,12 @@ int main() {
                 }
                 if (omp_get_thread_num() % 2 == 1){
                     
-                    #pragma omp for
+                    
                     for (int coluna = 4; coluna > 1; coluna--) {
 
                         #pragma omp atomic
                         sub_local -= matrixsarrus[0][coluna] * matrixsarrus[1][coluna - 1] * matrixsarrus[2][coluna - 2];
-                        printf("Number of threads = %d\n", omp_get_thread_num());
+                        
                     }
                     
 
