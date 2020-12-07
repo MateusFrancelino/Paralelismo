@@ -31,10 +31,11 @@ int main() {
     long double inicio;
     long double final;
    
-    for (int exec=0; exec< 1; exec++) {
+    for (int exec=0; exec< 100; exec++) {
         ver = 0;
         azul = 0;
         total = 0;
+        determinante = 0;
         /*
             for (int linha = 0; linha < 3; linha++) {
                  for (int coluna = 0; coluna < 3; coluna++) {
@@ -42,7 +43,7 @@ int main() {
                  }
          }
          
-       */
+       */   
         
         matrix[0][0] = 1;
         matrix[0][1] = 5;
@@ -92,7 +93,7 @@ int main() {
     int soma_local = 0;
     int sub_local = 0;
     for (int coluna = id; coluna < 3; coluna+=total) {
-        cout << id;
+        
         
         
         soma_local+= matrixsarrus[0][coluna] * matrixsarrus[1][coluna + 1] * matrixsarrus[2][coluna + 2];
@@ -109,14 +110,23 @@ int main() {
     soma += soma_local + sub_local;
     #pragma omp atomic
     determinante += soma;
-    
-    
-    }
 
 
+
+    
     
     }
     final = omp_get_wtime();
+    for (int l = 0; l < 3; l++) {
+        for (int c = 0; c < 5; c++) {
+            cout << matrixsarrus[l][c] << "          ";
+        }
+        cout << endl << endl << endl << endl;
+    }
+    
+    }
+    
+    cout << "Determinante e" << determinante<<endl;
     tempo_execucao += (final - inicio);
     cout << (int)tempo_execucao <<"     tempo_execucao"<< tempo_execucao;
    
