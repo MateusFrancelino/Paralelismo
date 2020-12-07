@@ -3,6 +3,7 @@
 #include <iostream>
 #include <time.h>
 #include <omp.h>
+#include<string>
 
 using namespace std;
 
@@ -19,14 +20,18 @@ int sorteio(int maximo, int minimo = 0) {
 
 
 int main() {
-    double inicio = omp_get_wtime();
+    string texto;   
     int matrix[3][3];
     long long int ver = 0;
     long long int azul = 0;
     int matrixsarrus[3][5];
     int total=0;
-    double tempo_execucao = 0.000000;
-    for (int exec = 0; exec < 1; exec++) {
+    long double tempo_execucao = 0.000000;
+    long long int determinante =0;
+    long double inicio;
+    long double final;
+   
+    for (int exec=0; exec< 1; exec++) {
         ver = 0;
         azul = 0;
         total = 0;
@@ -49,19 +54,22 @@ int main() {
         matrix[2][1] = -1;
         matrix[2][2] = 2;
         
+        inicio = omp_get_wtime();
+
         
-        #pragma omp parallel num_threads(3)
+        #pragma omp parallel  num_threads(3)
         {
 
-        #pragma omp single
+        
             total = omp_get_num_threads();
 
             int id = omp_get_thread_num();
-
+        
         for (int l = id; l < 3; l+=total) {
             for (int c = 0; c < 5; c++) {
+                
                 if (c > 2) {
-
+                    
                     matrixsarrus[l][c] = matrix[l][(c - 3)];
                 }
                 else {
@@ -71,19 +79,22 @@ int main() {
 
         }
         }
-
+        
     #pragma omp parallel num_threads(3)
     {
 
-    #pragma omp single
+    
     total = omp_get_num_threads();
 
     int id = omp_get_thread_num();
     int bloco = 3 / 3;
 
     int soma_local = 0;
+    int sub_local = 0;
     for (int coluna = id; coluna < 3; coluna+=total) {
-        //cout << id;
+        cout << id;
+        
+        
         soma_local+= matrixsarrus[0][coluna] * matrixsarrus[1][coluna + 1] * matrixsarrus[2][coluna + 2];
     }
     #pragma omp atomic
@@ -91,38 +102,24 @@ int main() {
     soma_local = 0;
     for (int coluna = id+2; coluna > 1; coluna-=total) {
         
-        soma_local -= matrixsarrus[0][coluna] * matrixsarrus[1][coluna - 1] * matrixsarrus[2][coluna - 2];
+        
+        sub_local -= matrixsarrus[0][coluna] * matrixsarrus[1][coluna - 1] * matrixsarrus[2][coluna - 2];
         }
-    
+    int soma = 0;
+    soma += soma_local + sub_local;
     #pragma omp atomic
-    azul += soma_local;
-    }
-
-    //for (int l = 0; l < 3; l++) {
-    //    for (int c = 0; c < 5; c++) {
-    //        cout << matrixsarrus[l][c] << "          ";
-    //   }
-    //    cout << endl << endl << endl << endl;
-    //}
-
+    determinante += soma;
     
-
-    //cout << endl << endl << "resultado" << endl;
-    //cout << ver;
-    //cout << endl << endl << "resultado" << endl;
-    //cout << azul;
-
-    long long int determinante = ver + azul;
-    //cout << endl << endl << "determinante" << endl;
-    //cout << determinante;
-    //cout << endl << endl << endl << endl << endl << endl;
-
+    
+    }
 
 
     
     }
-    double final = omp_get_wtime();
+    final = omp_get_wtime();
     tempo_execucao += (final - inicio);
-    cout << "==============Tempo de execucao" << (tempo_execucao) << "===========";
-    return 0;
+    cout << (int)tempo_execucao <<"     tempo_execucao"<< tempo_execucao;
+   
+    
+    
 }
