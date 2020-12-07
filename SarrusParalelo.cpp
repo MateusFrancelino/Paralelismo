@@ -19,24 +19,26 @@ int sorteio(int maximo, int minimo = 0) {
 
 
 int main() {
-
+    double inicio = omp_get_wtime();
     int matrix[3][3];
     long long int ver = 0;
     long long int azul = 0;
     int matrixsarrus[3][5];
     int total=0;
-    for (int exec = 0; exec < 20; exec++) {
+    double tempo_execucao = 0.000000;
+    for (int exec = 0; exec < 1; exec++) {
         ver = 0;
         azul = 0;
         total = 0;
+        /*
             for (int linha = 0; linha < 3; linha++) {
                  for (int coluna = 0; coluna < 3; coluna++) {
                      matrix[linha][coluna] = sorteio(333);
                  }
          }
          
+       */
         
-        /*
         matrix[0][0] = 1;
         matrix[0][1] = 5;
         matrix[0][2] = -2;
@@ -46,8 +48,8 @@ int main() {
         matrix[2][0] = 4;
         matrix[2][1] = -1;
         matrix[2][2] = 2;
-        */
-
+        
+        
         #pragma omp parallel num_threads(3)
         {
 
@@ -70,18 +72,6 @@ int main() {
         }
         }
 
-
-
-
-    
-   
-    for (int l = 0; l < 3; l++) {
-        for (int c = 0; c < 5; c++) {
-            cout << matrixsarrus[l][c]<<"          ";
-        }
-        cout << endl << endl << endl << endl;
-    }
-    
     #pragma omp parallel num_threads(3)
     {
 
@@ -93,7 +83,7 @@ int main() {
 
     int soma_local = 0;
     for (int coluna = id; coluna < 3; coluna+=total) {
-        cout << id;
+        //cout << id;
         soma_local+= matrixsarrus[0][coluna] * matrixsarrus[1][coluna + 1] * matrixsarrus[2][coluna + 2];
     }
     #pragma omp atomic
@@ -108,17 +98,31 @@ int main() {
     azul += soma_local;
     }
 
+    //for (int l = 0; l < 3; l++) {
+    //    for (int c = 0; c < 5; c++) {
+    //        cout << matrixsarrus[l][c] << "          ";
+    //   }
+    //    cout << endl << endl << endl << endl;
+    //}
+
     
 
-    cout << endl << endl << "resultado" << endl;
-    cout << ver;
-    cout << endl << endl << "resultado" << endl;
-    cout << azul;
+    //cout << endl << endl << "resultado" << endl;
+    //cout << ver;
+    //cout << endl << endl << "resultado" << endl;
+    //cout << azul;
 
     long long int determinante = ver + azul;
-    cout << endl << endl << "determinante" << endl;
-    cout << determinante;
-    cout << endl << endl << endl << endl << endl << endl;
+    //cout << endl << endl << "determinante" << endl;
+    //cout << determinante;
+    //cout << endl << endl << endl << endl << endl << endl;
+
+
+
+    
     }
+    double final = omp_get_wtime();
+    tempo_execucao += (final - inicio);
+    cout << "==============Tempo de execucao" << (tempo_execucao) << "===========";
     return 0;
 }
